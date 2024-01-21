@@ -14,8 +14,9 @@ class Event(models.Model):
     description = models.TextField("Описание", blank=True, null=True)
     organizations = models.ManyToManyField(
         Organization,
-        related_name="events_organizations",
+        related_name="events",
         verbose_name="Организации",
+        blank=True,
     )
     image = models.ImageField(
         verbose_name="Изображение", upload_to="images/", blank=True

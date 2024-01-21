@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 from dotenv import load_dotenv
 
@@ -31,9 +32,9 @@ INSTALLED_APPS = [
     "chat.apps.ChatConfig",
     "phonenumber_field",
     "rest_framework",
-    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
+    "django_filters",
     "channels",
-    "djoser",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,14 @@ TEMPLATES = [
 ASGI_APPLICATION = "backend.asgi.application"
 WSGI_APPLICATION = "backend.wsgi.application"
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -97,32 +106,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ("JWT",),
-}
-
-DJOSER = {
-    "LOGIN_FIELD": "email",
-    "HIDE_USERS": False,
-    "PERMISSIONS": {
-        "user_list": ["rest_framework.permissions.IsAdminUser"],
-        "user": ["rest_framework.permissions.IsAdminUser"],
-        "activation": ["rest_framework.permissions.IsAdminUser"],
-        "password_reset": ["rest_framework.permissions.IsAdminUser"],
-        "password_reset_confirm": ["rest_framework.permissions.IsAdminUser"],
-        "set_password": ["djoser.permissions.CurrentUserOrAdmin"],
-        "username_reset": ["rest_framework.permissions.IsAdminUser"],
-        "username_reset_confirm": ["rest_framework.permissions.IsAdminUser"],
-    },
-}
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
+        # 'rest_framework.permissions.IsAuthenticated',
     ],
+}
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": (
+        "Bearer",
+        "JWT",
+    ),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=180),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
 
@@ -130,7 +130,7 @@ STATIC_URL = "/static/backend_static/"
 STATIC_ROOT = "/static/backend_static/"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = "/media"
+MEDIA_ROOT = "media"
 
 LANGUAGE_CODE = "ru-RU"
 
@@ -139,15 +139,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = "static/"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
