@@ -1,0 +1,47 @@
+version: "3.8"
+
+volumes:
+  static_volume:
+  media_volume:
+
+services:
+  redis:
+    image: redis:latest
+    networks: 
+      - redisnet
+  
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    command: daphne -b 0.0.0.0 -p 8000 backend.asgi:application
+    env_file: 
+      - .env
+    links:
+      - redis
+    volumes:
+      - static_volume:/static/backend_static/
+      - media_volume:/media/images/
+    networks: 
+      - webnet
+      - redisnet
+    
+  gateway:
+    depends_on:
+      - backend
+    container_name: nginx
+    build: ./nginx/
+    env_file: .env
+    
+    
+    ports:
+      - 8000:80
+    volumes:
+      - static_volume:/static/backend_static/
+      - media_volume:/media/images/
+    networks:
+      - webnet
+
+networks: 
+  webnet:
+  redisnet:

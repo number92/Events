@@ -11,11 +11,13 @@ djangorestframework = "^3.14.0"
 python-dotenv = "^1.0.0"
 gunicorn = "^21.2.0"
 Pillow = "^9.5"
-djoser = "^2.2.2"
 django-phonenumber-field = {extras = ["phonenumberslite"], version = "^7.3.0"}
 djangorestframework-simplejwt = "^5.3.1"
 # channels = {extras = ["daphne"], version = "^4.0.0"}
 channels-redis = "^4.2.0"
+idna = "^3.6"
+drf-extra-fields = "^3.7.0"
+django-filter = "^23.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
