@@ -79,7 +79,6 @@ class EventsView(
         if self.action in ("create", "post"):
             return Event.objects.all()
         queryset = Event.objects.prefetch_related("organizations")
-
         return queryset
 
     async def post(self, request):

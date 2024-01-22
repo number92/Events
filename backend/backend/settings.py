@@ -13,7 +13,7 @@ SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["backend", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -70,11 +70,13 @@ TEMPLATES = [
 ASGI_APPLICATION = "backend.asgi.application"
 WSGI_APPLICATION = "backend.wsgi.application"
 
+redis_host = os.environ.get("REDIS_HOST", "redis")
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [(redis_host, 6379)],
         },
     },
 }
